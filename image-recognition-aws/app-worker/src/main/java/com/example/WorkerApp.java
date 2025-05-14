@@ -5,8 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.cloud.aws.messaging.config.annotation.EnableSqs;
-import org.springframework.stereotype.Component;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.rekognition.RekognitionClient;
@@ -15,7 +13,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Value;
 
-@EnableSqs
 @SpringBootApplication
 public class WorkerApp {
   public static void main(String[] args) {

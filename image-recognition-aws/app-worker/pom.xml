@@ -18,10 +18,9 @@
     <aws.sdk.version>2.25.35</aws.sdk.version>
   </properties>
 
-  <!-- ── BOMs ───────────────────────────────────────────────────── -->
+  <!-- BOMs -->
   <dependencyManagement>
     <dependencies>
-      <!-- Spring Boot -->
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -29,8 +28,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-
-      <!-- Spring Cloud AWS -->
       <dependency>
         <groupId>io.awspring.cloud</groupId>
         <artifactId>spring-cloud-aws-dependencies</artifactId>
@@ -38,8 +35,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-
-      <!-- AWS SDK v2 -->
       <dependency>
         <groupId>software.amazon.awssdk</groupId>
         <artifactId>bom</artifactId>
@@ -50,41 +45,39 @@
     </dependencies>
   </dependencyManagement>
 
-  <!-- ── Dependencies ───────────────────────────────────────────── -->
+  <!-- Dependencies -->
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
     </dependency>
 
+    <!-- Correct artefact name -->
     <dependency>
       <groupId>io.awspring.cloud</groupId>
-      <artifactId>spring-cloud-aws-starter-sqs-listener</artifactId>
+      <artifactId>spring-cloud-aws-starter-sqs</artifactId>
     </dependency>
 
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>rekognition</artifactId>
+      <version>${aws.sdk.version}</version>
     </dependency>
 
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>s3</artifactId>
+      <version>${aws.sdk.version}</version>
     </dependency>
   </dependencies>
 
-  <!-- ── Spring-Boot build plugin – creates executable JAR ───────── -->
+  <!-- Spring-Boot plugin -->
   <build>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring-boot.version}</version>
-        <executions>
-          <execution>
-            <goals><goal>repackage</goal></goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

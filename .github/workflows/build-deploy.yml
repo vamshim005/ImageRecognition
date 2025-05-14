@@ -32,12 +32,14 @@ jobs:
           java-version: '21'
 
       - name: Build Maven project
-        run: mvn -B -f app-${{ matrix.service }}/pom.xml package -DskipTests
-
+        run: |
+          mvn -B -f image-recognition-aws/app-${{ matrix.service }}/pom.xml \
+              package -DskipTests
 
       - name: Build & push Docker image
         run: |
-          docker build -t $ECR_REGISTRY/${{ matrix.service }}:$IMAGE_TAG app-${{ matrix.service }}
+          docker build -t $ECR_REGISTRY/${{ matrix.service }}:$IMAGE_TAG \
+               image-recognition-aws/app-${{ matrix.service }}
           docker push $ECR_REGISTRY/${{ matrix.service }}:$IMAGE_TAG
 
   deploy:

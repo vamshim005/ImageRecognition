@@ -62,6 +62,6 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Apply
-        run: terraform -chdir=iac apply -auto-approve \
+        run: terraform -chdir=image-recognition-aws/iac apply -auto-approve \
              -var="web_image=$ECR_REGISTRY/web:$IMAGE_TAG" \
              -var="worker_image=$ECR_REGISTRY/worker:$IMAGE_TAG"

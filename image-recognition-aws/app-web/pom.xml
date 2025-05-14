@@ -4,23 +4,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <!-- ── core metadata ──────────────────────────────────────────── -->
   <modelVersion>4.0.0</modelVersion>
+
   <groupId>com.example</groupId>
   <artifactId>app-web</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <!-- ── Java & Spring Boot versions ────────────────────────────── -->
   <properties>
     <java.version>21</java.version>
     <spring-boot.version>3.3.0</spring-boot.version>
+    <spring-cloud-aws.version>3.0.2</spring-cloud-aws.version>
+    <aws.sdk.version>2.25.35</aws.sdk.version>
   </properties>
 
-  <!-- ── Import Spring Boot's dependency BOM so you don't need to
-         declare versions for spring-boot-starter-* modules. ─────── -->
+  <!-- ── BOM imports ────────────────────────────────────────────── -->
   <dependencyManagement>
     <dependencies>
+
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -28,47 +29,71 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
+      <dependency>
+        <groupId>io.awspring.cloud</groupId>
+        <artifactId>spring-cloud-aws-dependencies</artifactId>
+        <version>${spring-cloud-aws.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bom</artifactId>
+        <version>${aws.sdk.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
-  <!-- ── Your dependencies (exactly your snippet) ───────────────── -->
+  <!-- ── Dependencies ───────────────────────────────────────────── -->
   <dependencies>
+
+    <!-- REST endpoints -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+
+    <!-- Bean validation (@Valid) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
+
+    <!-- Messaging starter gives you SQS template + listener annotations -->
     <dependency>
       <groupId>io.awspring.cloud</groupId>
-      <artifactId>spring-cloud-aws-starter-sqs</artifactId>
+      <artifactId>spring-cloud-aws-starter-messaging</artifactId>
     </dependency>
+
+    <!-- AWS SDK clients -->
     <dependency>
       <groupId>software.amazon.awssdk</groupId>
       <artifactId>s3</artifactId>
+      <version>${aws.sdk.version}</version>
     </dependency>
+
+    <!-- compile-only servlet API (already provided by Tomcat in Spring-Boot) -->
     <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
+
   </dependencies>
 
-  <!-- ── Build plugin to create an executable Spring-Boot jar ───── -->
   <build>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring-boot.version}</version>
-        <executions>
-          <execution>
-            <goals><goal>repackage</goal></goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
+
 </project>

@@ -68,8 +68,7 @@ module "alb" {
 }
 
 module "web_task_role" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-ecs-task-role"
-  version = "5.55.0"
+  source = "./modules/iam-ecs-task-role"
   name   = "web-task-role"
   policies = {
     s3_put = jsonencode({
@@ -92,8 +91,7 @@ module "web_task_role" {
 }
 
 module "worker_task_role" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-ecs-task-role"
-  version = "5.55.0"
+  source = "./modules/iam-ecs-task-role"
   name   = "worker-task-role"
   policies = {
     s3_rw = jsonencode({

@@ -1,0 +1,21 @@
+<!--
+  Add the following dependencies to support Spring Boot, AWS SQS listener, Rekognition, and S3
+-->
+<dependencies>
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>io.awspring.cloud</groupId>
+    <artifactId>spring-cloud-aws-starter-sqs-listener</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>rekognition</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>s3</artifactId>
+  </dependency>
+</dependencies> 

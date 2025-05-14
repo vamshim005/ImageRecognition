@@ -4,7 +4,6 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  # Can’t reference env.AWS_REGION here, so put the region string directly
   ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com
   IMAGE_TAG: ${{ github.sha }}
 
@@ -33,7 +32,8 @@ jobs:
           java-version: '21'
 
       - name: Build Maven project
-        run: mvn -B -pl app-${{ matrix.service }} package -DskipTests
+        run: mvn -B -f app-${{ matrix.service }}/pom.xml package -DskipTests
+
 
       - name: Build & push Docker image
         run: |

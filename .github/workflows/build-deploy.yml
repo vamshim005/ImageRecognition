@@ -1,32 +1,60 @@
 name: build-deploy
-on: [push]
+on:
+  push:
+
 env:
   AWS_REGION: us-east-1
   ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
   IMAGE_TAG: ${{ github.sha }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
     strategy:
       matrix:
         service: [web, worker]
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: aws-actions/configure-aws-credentials@v4
-        with: { role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}, aws-region: ${{ env.AWS_REGION }} }
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
+          aws-region:     ${{ env.AWS_REGION }}
+
       - uses: actions/setup-java@v4
-        with: { distribution: temurin, java-version: '21' }
-      - run: mvn -B -pl app-${{ matrix.service }} package -DskipTests
-      - run: |
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build Maven project
+        run: mvn -B -pl app-${{ matrix.service }} package -DskipTests
+
+      - name: Build & push Docker image
+        run: |
           docker build -t $ECR_REGISTRY/${{ matrix.service }}:$IMAGE_TAG app-${{ matrix.service }}
           docker push $ECR_REGISTRY/${{ matrix.service }}:$IMAGE_TAG
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: aws-actions/configure-aws-credentials@v4
-        with: { role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}, aws-region: ${{ env.AWS_REGION }} }
-      - run: terraform -chdir=iac apply -auto-approve \
-           -var="web_image=$ECR_REGISTRY/web:$IMAGE_TAG" \
-           -var="worker_image=$ECR_REGISTRY/worker:$IMAGE_TAG" 
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
+          aws-region:     ${{ env.AWS_REGION }}
+
+      - name: Terraform Apply
+        run: terraform -chdir=iac apply -auto-approve \
+             -var="web_image=$ECR_REGISTRY/web:$IMAGE_TAG" \
+             -var="worker_image=$ECR_REGISTRY/worker:$IMAGE_TAG"

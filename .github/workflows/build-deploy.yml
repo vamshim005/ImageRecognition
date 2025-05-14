@@ -63,6 +63,10 @@ jobs:
         with:
           terraform_version: 1.5.7
 
+      - name: Terraform Init
+        working-directory: image-recognition-aws/iac
+        run: terraform init
+
       - name: Terraform Apply
         working-directory: image-recognition-aws/iac
         run: |

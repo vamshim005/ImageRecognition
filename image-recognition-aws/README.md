@@ -1,5 +1,7 @@
 # AWS Cloud Image Recognition Service
 
+![CI](https://github.com/vamshim005/ImageRecognition/actions/workflows/build-deploy.yml/badge.svg)
+
 A container-based, queue-driven, fully-instrumented image-recognition service on AWS using ECS, SQS, S3, and Terraform.
 
 ## Architecture

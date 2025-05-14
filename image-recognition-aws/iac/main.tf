@@ -186,4 +186,11 @@ module "worker" {
   task_role_arn      = module.worker_task_role.arn
 }
 
+module "alarms" {
+  source       = "./modules/alarms"
+  queue_name   = aws_sqs_queue.jobs.name
+  cluster_name = module.cluster.cluster_name
+  web_service  = module.web.name
+}
+
 # TODO: Add ALB module, ECS service modules, IAM roles 

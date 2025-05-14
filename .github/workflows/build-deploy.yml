@@ -40,6 +40,7 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/${{ matrix.service }}:$IMAGE_TAG \
                image-recognition-aws/app-${{ matrix.service }}
+          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
           docker push $ECR_REGISTRY/${{ matrix.service }}:$IMAGE_TAG
 
   deploy:

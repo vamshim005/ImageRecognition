@@ -58,6 +58,9 @@ jobs:
           role-to-assume: ${{ secrets.AWS_OIDC_ROLE }}
           aws-region:     ${{ env.AWS_REGION }}
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: Terraform Apply
         run: terraform -chdir=iac apply -auto-approve \
              -var="web_image=$ECR_REGISTRY/web:$IMAGE_TAG" \

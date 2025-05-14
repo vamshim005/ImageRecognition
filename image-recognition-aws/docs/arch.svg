@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><text x="50" y="50" font-size="24">Architecture Diagram Placeholder</text><rect x="40" y="80" width="520" height="250" fill="#f0f0f0" stroke="#333"/><text x="60" y="120" font-size="16">Client → ALB (HTTPS) → ECS Web → SQS → ECS Worker → Rekognition/S3</text></svg>

@@ -69,7 +69,9 @@ jobs:
 
       - name: Terraform Init
         working-directory: image-recognition-aws/iac
-        run: terraform init
+        run: |
+          export TF_LOG=DEBUG
+          terraform init -upgrade
 
       - name: Terraform Apply
         working-directory: image-recognition-aws/iac

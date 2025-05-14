@@ -1,5 +1,6 @@
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "5.1.0"
   name   = "img-recognition-vpc"
   cidr   = "10.0.0.0/16"
   azs    = ["us-east-1a", "us-east-1b"]
@@ -9,6 +10,7 @@ module "vpc" {
 
 module "cluster" {
   source  = "terraform-aws-modules/ecs/aws"
+  version = "5.8.0"
   name    = "img-recognition"
   capacity_providers = ["FARGATE", "FARGATE_SPOT"]
 }
@@ -42,6 +44,7 @@ resource "aws_s3_bucket" "raw" {
 
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
+  version = "9.7.0"
   name    = "imgrec"
   load_balancer_type = "application"
   vpc_id             = module.vpc.vpc_id
@@ -66,6 +69,7 @@ module "alb" {
 
 module "web_task_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-ecs-task-role"
+  version = "5.55.0"
   name   = "web-task-role"
   policies = {
     s3_put = jsonencode({
@@ -89,6 +93,7 @@ module "web_task_role" {
 
 module "worker_task_role" {
   source = "terraform-aws-modules/iam/aws//modules/iam-ecs-task-role"
+  version = "5.55.0"
   name   = "worker-task-role"
   policies = {
     s3_rw = jsonencode({

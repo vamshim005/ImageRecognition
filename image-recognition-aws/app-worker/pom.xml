@@ -8,54 +8,48 @@
 
   <groupId>com.example</groupId>
   <artifactId>app-worker</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <properties>
     <java.version>21</java.version>
-    <spring-boot.version>3.3.0</spring-boot.version>
-    <spring-cloud-aws.version>3.0.2</spring-cloud-aws.version>
-    <aws.sdk.version>2.25.35</aws.sdk.version>
+    <spring-cloud-aws.version>3.0.1</spring-cloud-aws.version>
+    <aws.sdk.version>2.20.0</aws.sdk.version>
   </properties>
 
-  <!-- BOMs -->
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>${spring-boot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <type>pom</type><scope>import</scope>
       </dependency>
       <dependency>
         <groupId>io.awspring.cloud</groupId>
         <artifactId>spring-cloud-aws-dependencies</artifactId>
         <version>${spring-cloud-aws.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <type>pom</type><scope>import</scope>
       </dependency>
       <dependency>
         <groupId>software.amazon.awssdk</groupId>
         <artifactId>bom</artifactId>
         <version>${aws.sdk.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <type>pom</type><scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
 
-  <!-- Dependencies -->
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
     </dependency>
 
-    <!-- Correct artefact name -->
     <dependency>
       <groupId>io.awspring.cloud</groupId>
-      <artifactId>spring-cloud-aws-starter-sqs</artifactId>
+      <artifactId>spring-cloud-aws-starter-messaging</artifactId>
+      <version>${spring-cloud-aws.version}</version>
     </dependency>
 
     <dependency>
@@ -71,7 +65,6 @@
     </dependency>
   </dependencies>
 
-  <!-- Spring-Boot plugin -->
   <build>
     <plugins>
       <plugin>

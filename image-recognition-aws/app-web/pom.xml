@@ -50,6 +50,12 @@
     </dependency>
 
     <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>sqs</artifactId>
+      <version>${aws.sdk.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
@@ -60,12 +66,6 @@
       <artifactId>lombok</artifactId>
       <version>1.18.30</version>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>software.amazon.awssdk</groupId>
-      <artifactId>aws-core</artifactId>
-      <version>${aws.sdk.version}</version>
     </dependency>
   </dependencies>
 

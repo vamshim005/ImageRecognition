@@ -1,1 +1,5 @@
+web_image    = "630735080092.dkr.ecr.us-east-1.amazonaws.com/web:c427eb65b0175b90055804a42d4650594df84e63"
+worker_image = "630735080092.dkr.ecr.us-east-1.amazonaws.com/worker:c427eb65b0175b90055804a42d4650594df84e63"
+project_id   = "dev"
+aws_region   = "us-east-1"
 acm_cert_arn = "arn:aws:acm:us-east-1:630735080092:certificate/dd669240-b374-4c88-a553-470adae70d98" 

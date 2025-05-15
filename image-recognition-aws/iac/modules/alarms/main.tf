@@ -11,6 +11,7 @@ resource "aws_cloudwatch_metric_alarm" "queue_depth" {
   namespace           = "AWS/SQS"
   statistic           = "Sum"
   dimensions          = { QueueName = var.queue_name }
+  period              = 60
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_web" {
@@ -22,6 +23,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_web" {
   namespace           = "AWS/ECS"
   statistic           = "Average"
   dimensions          = { ClusterName = var.cluster_name, ServiceName = var.web_service }
+  period              = 60
 }
 
 resource "aws_cloudwatch_dashboard" "main" {
@@ -33,6 +35,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         properties = {
           metrics = [["AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", var.queue_name]]
           title   = "Queue depth"
+          region  = "us-east-1"
         }
       },
       {
@@ -40,6 +43,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         properties = {
           metrics = [["AWS/ECS", "CPUUtilization", "ServiceName", var.web_service, "ClusterName", var.cluster_name]]
           title   = "Web CPU %"
+          region  = "us-east-1"
         }
       }
     ]

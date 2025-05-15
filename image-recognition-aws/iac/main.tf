@@ -1,3 +1,7 @@
+provider "aws" {
+  region = var.aws_region
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.1.0"
@@ -6,6 +10,12 @@ module "vpc" {
   azs    = ["us-east-1a", "us-east-1b"]
   public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
   private_subnets = ["10.0.11.0/24", "10.0.12.0/24"]
+  
+  enable_nat_gateway = true
+  single_nat_gateway = true
+  
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 }
 
 module "cluster" {
@@ -70,51 +80,54 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "raw" {
 
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "9.7.0"
+  version = "8.7.0"
   name    = "imgrec"
   load_balancer_type = "application"
   vpc_id             = module.vpc.vpc_id
   subnets            = module.vpc.public_subnets
   enable_http2       = true
 
-  security_group_ingress_rules = {
-    all_http = {
+  security_group_rules = {
+    ingress_all_http = {
+      type        = "ingress"
       from_port   = 80
       to_port     = 80
-      ip_protocol = "tcp"
-      cidr_ipv4   = "0.0.0.0/0"
+      protocol    = "tcp"
+      description = "HTTP web traffic"
+      cidr_blocks = ["0.0.0.0/0"]
     }
-    all_https = {
+    ingress_all_https = {
+      type        = "ingress"
       from_port   = 443
       to_port     = 443
-      ip_protocol = "tcp"
-      cidr_ipv4   = "0.0.0.0/0"
+      protocol    = "tcp"
+      description = "HTTPS web traffic"
+      cidr_blocks = ["0.0.0.0/0"]
     }
-  }
-  security_group_egress_rules = {
-    all = {
-      ip_protocol = "-1"
-      cidr_ipv4   = "0.0.0.0/0"
-    }
-  }
-
-  listeners = {
-    https = {
-      port            = 443
-      protocol        = "HTTPS"
-      certificate_arn = var.acm_cert_arn
-      forward = {
-        target_group_key = "web"
-      }
+    egress_all = {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
     }
   }
 
-  target_groups = {
-    web = {
-      name_prefix          = "web-"
-      backend_protocol     = "HTTP"
-      backend_port         = 8080
-      target_type          = "ip"
+  https_listeners = [
+    {
+      port               = 443
+      protocol           = "HTTPS"
+      certificate_arn    = var.acm_cert_arn
+      target_group_index = 0
+    }
+  ]
+
+  target_groups = [
+    {
+      name_prefix      = "web-"
+      backend_protocol = "HTTP"
+      backend_port     = 8080
+      target_type      = "ip"
       health_check = {
         enabled             = true
         interval            = 30
@@ -127,7 +140,7 @@ module "alb" {
         matcher             = "200-399"
       }
     }
-  }
+  ]
 }
 
 module "web_task_role" {
@@ -228,7 +241,7 @@ module "web" {
   cluster_id        = module.cluster.cluster_id
   subnets           = module.vpc.private_subnets
   security_groups   = ["${aws_security_group.web.id}"]
-  target_group_arn  = module.alb.target_groups["web"].arn
+  target_group_arn  = module.alb.target_group_arns[0]
   listener_port     = 8080
   execution_role_arn = module.web_task_role.arn
   task_role_arn      = module.web_task_role.arn

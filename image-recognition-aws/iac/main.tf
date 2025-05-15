@@ -11,8 +11,6 @@ module "vpc" {
 module "cluster" {
   source  = "terraform-aws-modules/ecs/aws"
   version = "5.8.0"
-  name    = "img-recognition"
-  capacity_providers = ["FARGATE", "FARGATE_SPOT"]
 }
 
 resource "aws_sqs_queue" "jobs" {

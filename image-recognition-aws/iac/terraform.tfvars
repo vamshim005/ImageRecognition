@@ -1,0 +1,1 @@
+acm_cert_arn = "arn:aws:acm:us-east-1:630735080092:certificate/dd669240-b374-4c88-a553-470adae70d98" 

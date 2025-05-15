@@ -21,23 +21,31 @@ resource "aws_sqs_queue" "jobs" {
 
 resource "aws_s3_bucket" "raw" {
   bucket = "imgrec-raw-${var.project_id}"
-  lifecycle_rule {
-    prefix = ""
-    enabled = true
-    versioning {
-      enabled = true
-    }
+}
+
+resource "aws_s3_bucket_versioning" "raw" {
+  bucket = aws_s3_bucket.raw.id
+  versioning_configuration {
+    status = "Enabled"
   }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = "alias/aws/s3"
-        sse_algorithm     = "aws:kms"
-      }
-    }
-  }
+}
+
+resource "aws_s3_bucket_public_access_block" "raw" {
+  bucket = aws_s3_bucket.raw.id
   block_public_acls   = true
   block_public_policy = true
+  ignore_public_acls  = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "raw" {
+  bucket = aws_s3_bucket.raw.id
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = "alias/aws/s3"
+      sse_algorithm     = "aws:kms"
+    }
+  }
 }
 
 module "alb" {
@@ -191,7 +199,7 @@ module "alarms" {
   source       = "./modules/alarms"
   queue_name   = aws_sqs_queue.jobs.name
   cluster_name = module.cluster.cluster_name
-  web_service  = module.web.name
+  web_service  = module.web.service_name
 }
 
 # TODO: Add ALB module, ECS service modules, IAM roles 

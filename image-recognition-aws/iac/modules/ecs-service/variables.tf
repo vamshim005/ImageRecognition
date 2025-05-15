@@ -6,7 +6,7 @@ variable "execution_role_arn" {}
 variable "task_role_arn" {}
 
 output "service_arn" {
-  value = aws_ecs_service.this.arn
+  value = aws_ecs_service.this.id
 }
 
 output "task_definition_arn" {
